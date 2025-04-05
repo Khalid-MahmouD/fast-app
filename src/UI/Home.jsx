@@ -1,3 +1,4 @@
+import CreateUser from '../features/user/CreateUser.jsx';
 function Home() {
   return (
     <div>
@@ -6,6 +7,7 @@ function Home() {
         <br />
         Straight out of the oven, straight to you.
       </h1>
+      <CreateUser />
     </div>
   );
 }
