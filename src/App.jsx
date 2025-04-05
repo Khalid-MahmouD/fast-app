@@ -3,8 +3,8 @@ import Home from "./ui/Home"
 import Error from "./ui/Error"
 import Menu, { Loader as menuLoader } from './features/menu/Menu'
 import Cart from './features/cart/Cart'
-import Order from './features/order/Order'
-import CreateOrder from './features/order/CreateOrder'
+import Order, { loader as orderLoader } from './features/order/Order'
+import CreateOrder, { action as createOrderAction } from './features/order/CreateOrder'
 import AppLayout from "./ui/AppLayout"
 
 // handle page nor 
@@ -27,9 +27,19 @@ const router = createBrowserRouter([
         path: '/cart', element: <Cart />
       },
       {
-        path: '/order/new', element: <CreateOrder />,
+        path: '/order/new',
+        element: <CreateOrder />,
+        // whenever there a form submission this will be called
+        action: createOrderAction,
+        errorElement: <Error />,
       },
-      { path: '/order/:orderId', element: <Order />, },
+      {
+        path: '/order/:orderId',
+        element: <Order />,
+        loader: orderLoader,
+        errorElement: <Error />,
+
+      },
     ],
 
   },
