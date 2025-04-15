@@ -1,3 +1,4 @@
+import { formatCurrency } from '../../utils/formatCurrency';
 function CartItem({ item }) {
   const { pizzaId, name, quantity, totalPrice } = item;
 

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { updateName } from './userSlice';
 import { useNavigate, useNavigation } from 'react-router-dom';
+import Button from '../../UI/Button';
 
 function CreateUser() {
   const [username, setUsername] = useState('');
@@ -24,7 +25,7 @@ function CreateUser() {
       </p>
 
       <input
-        className="w-72"
+        className="w-72 input mb-8"
         type="text"
         placeholder="Your full name"
         value={username}
@@ -33,9 +34,9 @@ function CreateUser() {
 
       {username !== '' && (
         <div>
-          <button disabled={isSubmitting}>
+          <Button disabled={isSubmitting}>
             {isSubmitting ? 'submitting...' : 'Order'}
-          </button>
+          </Button>
         </div>
       )}
     </form>
