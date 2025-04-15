@@ -4,7 +4,7 @@ import Username from '../features/user/Username';
 
 function Header() {
   return (
-    <header className="item-center sm:bx-6 flex justify-between border-b border-stone-200 bg-yellow-500 px-4 py-3 uppercase">
+    <header className="item-center sm:bx-6 flex justify-between border-b border-stone-200 bg-yellow-400 px-4 py-3 uppercase">
       <Link to="/" className="tracking-widest">
         Fast React Pizza Co.
       </Link>
