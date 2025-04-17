@@ -1,5 +1,4 @@
 import Button from '../../UI/Button';
-import { action } from './createOrder';
 
 import { Form, useActionData, useNavigation } from 'react-router-dom';
 
@@ -81,9 +80,10 @@ function CreateOrder() {
         <div>
           <input type="hidden" name="cart" value={JSON.stringify(cart)} />
           <Button
+            type={"primary"}
             disabled={isSubmitting}
           >
-            {isSubmitting ? 'Placing order...' : 'Order now'}
+            {isSubmitting ? 'Placing order...' : 'Start Order'}
           </Button>
         </div>
       </Form>

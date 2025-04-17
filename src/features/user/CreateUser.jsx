@@ -10,6 +10,7 @@ function CreateUser() {
   const navigate = useNavigate();
   const isSubmitting = navigation.state === 'submitting';
   const dispatch = useDispatch();
+
   function handleSubmit(e) {
     e.preventDefault();
     if (!username) return;
@@ -34,7 +35,7 @@ function CreateUser() {
 
       {username !== '' && (
         <div>
-          <Button disabled={isSubmitting}>
+          <Button type={'primary'} disabled={isSubmitting}>
             {isSubmitting ? 'submitting...' : 'Order'}
           </Button>
         </div>
