@@ -31,7 +31,6 @@ const router = createBrowserRouter([
       {
         path: '/order/new',
         element: <CreateOrder />,
-        // whenever there a form submission this will be called
         action: createOrderAction,
         errorElement: <Error />,
       },

@@ -1,3 +1,4 @@
+import { useSelector } from 'react-redux';
 import Button from '../../UI/Button';
 
 import { Form, useActionData, useNavigation } from 'react-router-dom';
@@ -33,6 +34,8 @@ function CreateOrder() {
   console.log(navigation.state);
   const isSubmitting = navigation.state === 'submitting';
   const formErrors = useActionData();
+
+  const username = useSelector(state => state.user.username);
   // console.log(Object.keys(formErrors));
 
   // const [withPriority, setWithPriority] = useState(false);
@@ -41,11 +44,11 @@ function CreateOrder() {
     <div className='px-4 py-6'>
       <h2 className='text-xl font-semibold mb-8'>{`Ready to order? Let's go!`}</h2>
 
-      {/* <Form method="POST" action="/oder/new"> */}
+      {/* <Form method="POST"></Form> */}
       <Form method="POST">
         <div className='flex flex-col gap-2  sm:flex-row sm:items-center mb-5'>
           <label className='sm:basis-40'>First Name</label>
-          <input className='input grow ' type="text" name="customer" required />
+          <input className='input grow ' type="text" name="customer" required defaultValue={username} />
         </div>
 
         {/* Phone NUMBER */}
