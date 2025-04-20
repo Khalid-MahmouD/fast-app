@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { formatCurrency } from '../../utils/helpers';
 import Button from '../../UI/Button';
-
+import { useDispatch } from 'react-redux';
+import { addItem } from '../cart/cartSlice';
 type pizza = {
   id: number;
   name: string;
@@ -14,7 +15,28 @@ type pizza = {
 
 function MenuItem({ pizza: pizza }) {
   const { id, name, unitPrice, ingredients, soldOut, imageUrl } = pizza;
-
+  const dispatch = useDispatch();
+  
+  function handleAddToCart() {
+    // console.log(id);
+    /*
+    {
+            pizzaId: 1,
+            name: "Mediterranean",
+            quantity: 2,
+            unitPrice: 16,
+            totalPrice: 32,
+        }
+    */
+    const newItem = {
+      pizzaId: id,
+      name,
+      quantity: 1,
+      unitPrice,
+      totalPrice: unitPrice * 1,
+    }
+    dispatch(addItem(newItem))
+  }
   return (
     <li className="flex gap-4">
       <img
@@ -35,7 +57,7 @@ function MenuItem({ pizza: pizza }) {
               Sold out
             </p>
           )}
-          <Button type={'small'}>Add Card</Button>
+          {!soldOut && <Button type={'small'} onClick={handleAddToCart}>Add Card</Button>}
         </div>
       </div>
     </li>
