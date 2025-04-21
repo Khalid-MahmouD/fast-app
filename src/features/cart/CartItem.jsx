@@ -1,10 +1,14 @@
-import Button from '../../UI/Button';
 import { formatCurrency } from '../../utils/helpers';
 import PropTypes from 'prop-types';
+import DeleteItem from './DeleteItem';
+import UpdateItemQuantity from './UpdateItemQuantity';
+import { useSelector } from 'react-redux';
+import { getCurrentQuantityById } from './cartSlice';
 
 
 function CartItem({ item }) {
   const { pizzaId, name, quantity, totalPrice } = item;
+  const currentQuantity = useSelector(getCurrentQuantityById(pizzaId));
 
   return (
     <li className='py-3 sm:flex sm:justify-between sm:items-center'>
@@ -13,7 +17,8 @@ function CartItem({ item }) {
       </p>
       <div className='flex justify-between items-center sm:gap-6'>
         <p className='text-sm font-bold'>{formatCurrency(totalPrice)}</p>
-        <Button type='small'>Delete</Button>
+        <UpdateItemQuantity pizzaId={pizzaId} currentQuantity={currentQuantity} />
+        <DeleteItem pizzaId={pizzaId} />
       </div>
     </li>
   );
@@ -21,10 +26,10 @@ function CartItem({ item }) {
 
 export default CartItem;
 CartItem.propTypes = {
-  item: {
+  item: PropTypes.shape({
     pizzaId: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
     quantity: PropTypes.number.isRequired,
     totalPrice: PropTypes.number.isRequired,
-  }
+  }).isRequired,
 }

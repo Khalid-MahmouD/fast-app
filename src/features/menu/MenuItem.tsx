@@ -2,8 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { formatCurrency } from '../../utils/helpers';
 import Button from '../../UI/Button';
-import { useDispatch } from 'react-redux';
-import { addItem } from '../cart/cartSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { addItem, getCurrentQuantityById } from '../cart/cartSlice';
+import DeleteItem from '../cart/DeleteItem';
+import UpdateItemQuantity from '../cart/UpdateItemQuantity';
 type pizza = {
   id: number;
   name: string;
@@ -11,23 +13,16 @@ type pizza = {
   ingredients: string[];
   soldOut: boolean;
   imageUrl: string;
+  isPizzaInCart: boolean;
 };
 
 function MenuItem({ pizza: pizza }) {
   const { id, name, unitPrice, ingredients, soldOut, imageUrl } = pizza;
   const dispatch = useDispatch();
-  
+  const currentQuantity = useSelector(getCurrentQuantityById(id));
+  const isInCart = currentQuantity > 0;
+
   function handleAddToCart() {
-    // console.log(id);
-    /*
-    {
-            pizzaId: 1,
-            name: "Mediterranean",
-            quantity: 2,
-            unitPrice: 16,
-            totalPrice: 32,
-        }
-    */
     const newItem = {
       pizzaId: id,
       name,
@@ -50,6 +45,7 @@ function MenuItem({ pizza: pizza }) {
           {ingredients.join(', ')}
         </p>
         <div className="mt-auto flex flex-1 items-center justify-between">
+
           {!soldOut ? (
             <p className="text-sm">{formatCurrency(unitPrice)}</p>
           ) : (
@@ -57,7 +53,15 @@ function MenuItem({ pizza: pizza }) {
               Sold out
             </p>
           )}
-          {!soldOut && <Button type={'small'} onClick={handleAddToCart}>Add Card</Button>}
+
+          {!soldOut && isInCart && <div className='flex items-center gap-2 sm:gap-8'>
+            <UpdateItemQuantity pizzaId={id} currentQuantity={currentQuantity} />
+            <DeleteItem pizzaId={id} />
+
+          </div>
+          }
+
+          {!soldOut && !isInCart && <Button type={'small'} onClick={handleAddToCart}>Add Card</Button>}
         </div>
       </div>
     </li>
