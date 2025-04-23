@@ -73,6 +73,7 @@ export default cartSlice.reducer;
 
 export const getUsername = state => state.user.username;
 
+
 export const getCart = state => state.cart.cart;
 
 export const getTotalCartQuantity = state => state.cart.cart.reduce((acc, item) => (item.quantity + acc), 0);

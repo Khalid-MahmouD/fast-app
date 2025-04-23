@@ -1,49 +1,29 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Button from '../../UI/Button';
 
 import { Form, useActionData, useNavigation } from 'react-router-dom';
+import { fetchAddress, getUserAddress, getUsername } from '../user/userSlice';
+import { getCart } from '../cart/cartSlice';
+import { useState } from 'react';
 
 // https://uibakery.io/regex-library/phone-number
 
-const fakeCart = [
-  {
-    pizzaId: 12,
-    name: 'Mediterranean',
-    quantity: 2,
-    unitPrice: 16,
-    totalPrice: 32,
-  },
-  {
-    pizzaId: 6,
-    name: 'Vegetable',
-    quantity: 1,
-    unitPrice: 13,
-    totalPrice: 13,
-  },
-  {
-    pizzaId: 11,
-    name: 'Spinach and Mushroom',
-    quantity: 1,
-    unitPrice: 15,
-    totalPrice: 15,
-  },
-];
-
 function CreateOrder() {
+  const [withPriority, setWithPriority] = useState(false);
+
   const navigation = useNavigation();
-  console.log(navigation.state);
   const isSubmitting = navigation.state === 'submitting';
   const formErrors = useActionData();
+  const dispatch = useDispatch();
 
-  const username = useSelector(state => state.user.username);
-  // console.log(Object.keys(formErrors));
-
-  // const [withPriority, setWithPriority] = useState(false);
-  const cart = fakeCart;
+  const username = useSelector(getUsername);
+  const cart = useSelector(getCart);
+  const address = useSelector(getUserAddress);
+  console.log(username, address);
   return (
     <div className='px-4 py-6'>
       <h2 className='text-xl font-semibold mb-8'>{`Ready to order? Let's go!`}</h2>
-
+      <Button type={"secondary"} onClick={() => dispatch(fetchAddress())} className='mb-5'>Get Location</Button>
       {/* <Form method="POST"></Form> */}
       <Form method="POST">
         <div className='flex flex-col gap-2  sm:flex-row sm:items-center mb-5'>
@@ -65,7 +45,7 @@ function CreateOrder() {
           <label className='sm:basis-40'>Address</label>
           <div className='grow'>
             <input
-              className='input w-full'
+              className='input w-full' defaultValue={address}
               type="text" name="address" required />
           </div>
         </div>
@@ -77,8 +57,8 @@ function CreateOrder() {
             type="checkbox"
             name="priority"
             id="priority"
-          // value={withPriority}
-          // onChange={(e) => setWithPriority(e.target.checked)}
+            value={withPriority}
+            onChange={(e) => setWithPriority(e.target.checked)}
           />
           <label className='font-medium' htmlFor="priority">Want to yo give your order priority?</label>
         </div>
