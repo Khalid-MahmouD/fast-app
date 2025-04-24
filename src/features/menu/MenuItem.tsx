@@ -17,6 +17,7 @@ type pizza = {
 };
 
 function MenuItem({ pizza: pizza }) {
+
   const { id, name, unitPrice, ingredients, soldOut, imageUrl } = pizza;
   const dispatch = useDispatch();
   const currentQuantity = useSelector(getCurrentQuantityById(id));
@@ -28,6 +29,7 @@ function MenuItem({ pizza: pizza }) {
       name,
       quantity: 1,
       unitPrice,
+      ingredients,
       totalPrice: unitPrice * 1,
     }
     dispatch(addItem(newItem))

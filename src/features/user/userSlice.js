@@ -21,7 +21,6 @@ export const fetchAddress = createAsyncThunk('user/fetchAddress', async function
   const addressObj = await getAddress(position);
   const address = `${addressObj?.locality}, ${addressObj?.city} ${addressObj?.postcode}, ${addressObj?.countryName}`;
   // 3) Then we return an object with the data that we are interested in
-  console.log(address, position);
   return { position, address };
 
 })
@@ -31,8 +30,9 @@ export const fetchAddress = createAsyncThunk('user/fetchAddress', async function
 const initialState = {
   username: '',
   status: 'idle',
-  position: {},
   address: '',
+  position: {},
+  phone: '',
   error: '',
 }
 
@@ -42,7 +42,17 @@ const userSlice = createSlice({
   reducers: {
     updateName(state, action) {
       state.username = action.payload;
-    }
+    },
+    // update the address and position in the state
+    updateAddress(state, action) {
+      state.address = action.payload;
+    },
+    updatePosition(state, action) {
+      state.position = action.payload;
+    },
+    updatePhoneNumber(state, action) {
+      state.phone = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -54,18 +64,13 @@ const userSlice = createSlice({
         state.position = action.payload.position
         state.address = action.payload.address
       })
-      .addCase('user/fetchAddress/rejected', (state, action) => {
+      .addCase('user/fetchAddress/rejected', (state) => {
         state.status = 'error'
-        state.error = action.error.message
+        state.error = 'There was a problem with your address. Make sure you have given us the right one.'
       })
   }
 })
 
-export const { updateName } = userSlice.actions;
+export const { updateName, updateAddress, updatePosition, updatePhoneNumber } = userSlice.actions;
 
 export default userSlice.reducer;
-
-
-export const getUsername = state => state.user.username;
-export const getUserPosition = state => state.user.position;
-export const getUserAddress = state => state.user.address;

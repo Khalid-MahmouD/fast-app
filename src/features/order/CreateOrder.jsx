@@ -2,9 +2,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import Button from '../../UI/Button';
 
 import { Form, useActionData, useNavigation } from 'react-router-dom';
-import { fetchAddress, getUserAddress, getUsername } from '../user/userSlice';
+import { fetchAddress } from '../user/userSlice';
 import { getCart } from '../cart/cartSlice';
 import { useState } from 'react';
+import EmptyCart from '../cart/EmptyCart';
 
 // https://uibakery.io/regex-library/phone-number
 
@@ -16,60 +17,113 @@ function CreateOrder() {
   const formErrors = useActionData();
   const dispatch = useDispatch();
 
-  const username = useSelector(getUsername);
+  const {
+    username,
+    status: addressStatus,
+    address,
+    position,
+    error: errorAddress,
+  } = useSelector((state) => state.user);
   const cart = useSelector(getCart);
-  const address = useSelector(getUserAddress);
-  console.log(username, address);
+  const isLoadingAddress = addressStatus === 'loading';
+  // const username = useSelector(getUsername);
+  // const address = useSelector(getUserAddress);
+  if (!cart.length) return <EmptyCart />;
+
   return (
-    <div className='px-4 py-6'>
-      <h2 className='text-xl font-semibold mb-8'>{`Ready to order? Let's go!`}</h2>
-      <Button type={"secondary"} onClick={() => dispatch(fetchAddress())} className='mb-5'>Get Location</Button>
+    <div className="px-4 py-6">
+      <h2 className="mb-8 text-xl font-semibold">{`Ready to order? Let's go!`}</h2>
+
       {/* <Form method="POST"></Form> */}
       <Form method="POST">
-        <div className='flex flex-col gap-2  sm:flex-row sm:items-center mb-5'>
-          <label className='sm:basis-40'>First Name</label>
-          <input className='input grow ' type="text" name="customer" required defaultValue={username} />
+        <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
+          <label className="sm:basis-40">First Name</label>
+          <input
+            className="input grow"
+            type="text"
+            name="customer"
+            required
+            defaultValue={username}
+          />
         </div>
 
         {/* Phone NUMBER */}
-        <div className='flex flex-col gap-2  sm:flex-row sm:items-center mb-5'>
-          <label className='sm:basis-40'>Phone number</label>
-          <div className='grow flex flex-col'>
-            <input className='input w-full' type="tel" name="phone" required />
-            {formErrors?.phone && <p className='mt-2 text-xs text-ted-700 bg-red-100 rounded-md p-2'>{formErrors.phone}</p>}
+        <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
+          <label className="sm:basis-40">Phone number</label>
+          <div className="flex grow flex-col">
+            <input className="input w-full" type="tel" name="phone" required />
+            {formErrors?.phone && (
+              <p className="text-ted-700 mt-2 rounded-md bg-red-100 p-2 text-xs">
+                {formErrors.phone}
+              </p>
+            )}
           </div>
         </div>
 
         {/* ADDRESS */}
-        <div className='flex flex-col gap-2  sm:flex-row sm:items-center mb-5'>
-          <label className='sm:basis-40'>Address</label>
-          <div className='grow'>
+        <div className="relative mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
+          <label className="sm:basis-40">Address</label>
+          <div className="grow">
             <input
-              className='input w-full' defaultValue={address}
-              type="text" name="address" required />
+              disabled={isLoadingAddress}
+              className="input w-full"
+              defaultValue={address}
+              type="text"
+              name="address"
+              required
+            />
+            {addressStatus === 'error' && (
+              <p className="text-ted-700 mt-2 rounded-md bg-red-100 p-2 text-xs">
+                {errorAddress}
+              </p>
+            )}
           </div>
+          {/* INTEGRATE GEOLOCATION */}
+          {!position.latitude && !position.longitude && (
+            <span className="absolute right-[3px] top-[3px] z-50 md:right-[4px] md:top-[4px]">
+              <Button
+                disabled={isLoadingAddress}
+                type={'small'}
+                onClick={(e) => {
+                  e.preventDefault();
+                  dispatch(fetchAddress());
+                }}
+              >
+                Get Location
+              </Button>
+            </span>
+          )}
         </div>
 
         {/* CHECKBOX */}
-        <div className='mb-12 flex items-center gap-5 '>
+        <div className="mb-12 flex items-center gap-5">
           <input
-            className='h-6 w-6 accent-yellow-400 focus:outline-none focus:ring focus:ring-yellow-400 focus:ring-offset-2'
+            className="h-6 w-6 accent-yellow-400 focus:outline-none focus:ring focus:ring-yellow-400 focus:ring-offset-2"
             type="checkbox"
             name="priority"
             id="priority"
             value={withPriority}
             onChange={(e) => setWithPriority(e.target.checked)}
           />
-          <label className='font-medium' htmlFor="priority">Want to yo give your order priority?</label>
+          <label className="font-medium" htmlFor="priority">
+            Want to yo give your order priority?
+          </label>
         </div>
 
         {/* SUBMITTING */}
         <div>
           <input type="hidden" name="cart" value={JSON.stringify(cart)} />
-          <Button
-            type={"primary"}
-            disabled={isSubmitting}
-          >
+          <input
+            type="hidden"
+            name="position"
+            value={
+              position.latitude && position.longitude
+                ? `${position.latitude}, ${position.longitude}`
+                : ''
+            }
+          />
+
+          <Button type={'primary'} disabled={isSubmitting || isLoadingAddress}>
             {isSubmitting ? 'Placing order...' : 'Start Order'}
           </Button>
         </div>

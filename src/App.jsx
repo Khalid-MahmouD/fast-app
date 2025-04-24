@@ -6,6 +6,7 @@ import Cart from './features/cart/Cart';
 import Order, { loader as orderLoader } from './features/order/Order';
 import CreateOrder from './features/order/CreateOrder.jsx';
 import { action as createOrderAction } from './features/order/createOrder';
+import { action as updateOrderAction } from './features/order/UpdateOrder.jsx';
 import AppLayout from './ui/AppLayout';
 
 // handle page nor
@@ -38,6 +39,7 @@ const router = createBrowserRouter([
         path: '/order/:orderId',
         element: <Order />,
         loader: orderLoader,
+        action: updateOrderAction,
         errorElement: <Error />,
       },
     ],

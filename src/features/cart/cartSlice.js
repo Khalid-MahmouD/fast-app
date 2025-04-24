@@ -19,7 +19,7 @@ const cartSlice = createSlice({
     reducers: {
         // add action creator
         addItem(state, action) {
-            const { pizzaId, name, unitPrice } = action.payload;
+            const { pizzaId, name, unitPrice, ingredients } = action.payload;
             const existingItem = state.cart.find(item => item.pizzaId === pizzaId);
             if (existingItem) {
                 existingItem.quantity += 1;
@@ -29,6 +29,7 @@ const cartSlice = createSlice({
                     pizzaId,
                     name,
                     quantity: 1,
+                    ingredients,
                     unitPrice,
                     totalPrice: unitPrice
                 });
@@ -52,7 +53,7 @@ const cartSlice = createSlice({
         decreaseItemQuantity(state, action) {
             const pizzaId = action.payload;
             const existingItem = state.cart.find(item => item.pizzaId === pizzaId);
-            
+
             if (existingItem) {
                 existingItem.quantity--;
                 existingItem.totalPrice = existingItem.quantity * existingItem.unitPrice;
